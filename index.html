@@ -35,9 +35,22 @@
     AFRAME.registerComponent('streamer', {
         tick: function () {
           const rotation = this.el.object3D.rotation;
-          Object.assign(STATE, {x: rotation.x, y: rotation.y, z: rotation.z});
+		  const triggerPressed = this.el.getAttribute('triggerPressed');
+          Object.assign(STATE, {x: rotation.x, y: rotation.y, z: rotation.z, trigger: triggerPressed});
         },
       });
+
+	AFRAME.registerComponent('trigger-listener', {
+  init: function () {
+    var el = this.el;
+    el.addEventListener('triggerdown', function (evt) {
+      el.setAttribute('triggerPressed', 1);
+    });
+    el.addEventListener('triggerup', function (evt) {
+      el.setAttribute('triggerPressed', 0);
+    });
+  }
+});
   </script>
 </head>
 
@@ -46,7 +59,7 @@
     <a-entity id="rig" position="0 0 0" rotation="0 180 0">
       <a-entity camera position="0 1.7 0">
       </a-entity>
-      <a-entity id="streamer" streamer laser-controls line="color: red; opacity: 0.75"></a-entity>
+      <a-entity id="streamer" streamer laser-controls trigger-listener oculus-go-controls line="color: purple; opacity: 0.75"></a-entity>
     </a-entity>
 
     <a-entity id="world">
